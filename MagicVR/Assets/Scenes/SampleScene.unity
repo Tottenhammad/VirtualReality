@@ -444,6 +444,12 @@ MonoBehaviour:
   useAbleSpells:
   - {fileID: 11400000, guid: eb26462e4cbc36649829d77c17a9d6b4, type: 2}
   - {fileID: 11400000, guid: bdf59269ceb7f2f428a7708c69d366e3, type: 2}
+  head: {fileID: 534669905}
+  tracker: {fileID: 0}
+  rotRefObj: {fileID: 0}
+  minDist: 0.1
+  directionTolerance: 0.4
+  sequence: 
 --- !u!114 &343035664
 MonoBehaviour:
   m_ObjectHideFlags: 0

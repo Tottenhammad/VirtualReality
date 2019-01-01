@@ -8,4 +8,6 @@ public class SOSpell : ScriptableObject{
     public string spellDesc;
     public float spellSpeed;
     public GameObject spellObject;
+
+    public List<int> spellCastPos = new List<int>();
 }
