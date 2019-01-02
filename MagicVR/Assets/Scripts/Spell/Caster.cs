@@ -76,7 +76,8 @@ public class Caster : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A) || OVRInput.Get(Draw))
         {
-            Track();
+            DollarTest();
+            //Track();
             tracking = true;
 
             if (sequence.Count > 10)
@@ -261,5 +262,22 @@ public class Caster : MonoBehaviour
         return headingDir / distance;
     }
 
+    // Dollar-P Implementation
 
+    void DollarTest()
+    {
+        Transform track = new GameObject().transform;
+        track.position = castPoint.position;
+
+        if (!refStatus || tracker == null)
+        {
+            RefBuild();
+            tracker.position = track.position;
+        }
+        rotRefObj.eulerAngles = new Vector3(0, head.eulerAngles.y, 0);
+        track.parent = rotRefObj;
+
+
+        Debug.Log(track.localPosition);
+    }
 }
