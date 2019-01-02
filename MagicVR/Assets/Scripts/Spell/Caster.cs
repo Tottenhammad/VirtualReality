@@ -4,16 +4,18 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
-
+using UnityEngine.UI;
 public class Caster : MonoBehaviour
 {
 
     // Base Stuff
     public Transform castPoint;
-    public GameObject spawnObject;
     public List<SOSpell> useAbleSpells = new List<SOSpell>();
-
-
+    public SpellCastHandler sCH;
+    void UseSpell(SOSpell spell)
+    {
+        sCH.SetCurrentSpell(spell, castPoint, 1);
+    }
     void Cast(SOSpell spell)
     {
         GameObject gO = Instantiate(spell.spellObject, castPoint.position, castPoint.rotation);
@@ -50,7 +52,7 @@ public class Caster : MonoBehaviour
         foreach (SOSpell spell in useAbleSpells)
         {
             if (speech.text == spell.spellName)
-                Cast(spell);
+                UseSpell(spell);
         }
     }
 
@@ -63,28 +65,37 @@ public class Caster : MonoBehaviour
     public float minDist;
     public float directionTolerance;
     public List<int> sequence = new List<int>();
+    public OVRInput.RawButton Draw;
 
+
+    public Text test;
     bool tracking;
 
     private void Update()
     {
-        if (tracking)
+
+        if (Input.GetKey(KeyCode.A) || OVRInput.Get(Draw))
         {
             Track();
-            CheckForMatch();
+            tracking = true;
 
             if (sequence.Count > 10)
                 sequence.RemoveAt(0);
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        else
         {
-            Track();
-            tracking = true;
+            if (sequence.Count > 1)
+            {
+                CheckForMatch();
+                ResetTracking();
+                tracking = false;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.N))
+
+        test.text = "";
+        foreach(int i in sequence)
         {
-            ResetTracking ();
-            tracking = false;
+            test.text += i.ToString();
         }
     }
     void CheckForMatch()
@@ -103,7 +114,7 @@ public class Caster : MonoBehaviour
                 }
                 if (correctCounter == spell.spellCastPos.Count)
                 {
-                    Cast(spell);
+                    UseSpell(spell);
                     ResetTracking();
                 }
                 }
@@ -122,6 +133,8 @@ public class Caster : MonoBehaviour
         refStatus = true;
     }
 
+
+    Vector3 lastPoint;
     void Track()
     {
         int dir = 0;
@@ -217,9 +230,15 @@ public class Caster : MonoBehaviour
                 }
             }
             if (sequence.Count == 0)
+            {
                 sequence.Add(0);
-            if(dir != sequence[sequence.Count - 1])
+                lastPoint = track.position;
+            }
+            if (dir != sequence[sequence.Count - 1] && Vector3.Distance(track.position, lastPoint) > 0.1f)
+            {
+                lastPoint = track.position;
                 sequence.Add(dir);
+            }
         }
 
 

@@ -10,6 +10,7 @@ public class Hand : MonoBehaviour
     {
         // Setup the tracking area so hand know where they can and can't go
         XRDevice.SetTrackingSpaceType(TrackingSpaceType.RoomScale);
+        
     }
 
     private void Update()

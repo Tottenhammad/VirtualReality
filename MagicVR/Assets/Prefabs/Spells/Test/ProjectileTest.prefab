@@ -23,6 +23,8 @@ GameObject:
   - component: {fileID: 23372105114810450}
   - component: {fileID: 65626889621630962}
   - component: {fileID: 54028290219981038}
+  - component: {fileID: 114223572402677826}
+  - component: {fileID: 114585458354716068}
   m_Layer: 0
   m_Name: ProjectileTest
   m_TagString: Untagged
@@ -112,3 +114,27 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114223572402677826
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1857301553232712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 110bcdac2c6b08342b9d73438d5377f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spell: {fileID: 0}
+--- !u!114 &114585458354716068
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1857301553232712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edb1915936aedf443b258aa9cda0c028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aSA: {fileID: 0}
