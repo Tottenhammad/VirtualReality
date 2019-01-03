@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DollarPoint
 {
-    public float x, y;
+    public float x = 0, y = 0;
     public int iD;
 
     public DollarPoint(float x, float y, int iD)

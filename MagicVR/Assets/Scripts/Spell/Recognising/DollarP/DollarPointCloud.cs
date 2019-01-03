@@ -7,7 +7,7 @@ using System;
 #endregion
 public class DollarPointCloud : MonoBehaviour
 {
-    static DollarResult Classify(DollarGesture checkee, DollarGesture[] checkers)
+    public static DollarResult Classify(DollarGesture checkee, DollarGesture[] checkers)
     {
         float minDist = float.MaxValue;
         string gesture = "";
@@ -20,7 +20,7 @@ public class DollarPointCloud : MonoBehaviour
                 gesture = checker.gestureName;
             }
         }
-        return gesture == "" ? new DollarResult() { Value = 0, Gesture = "None Found"} : new DollarResult() { Value = Mathf.Max((minDist - 2.0f) / -2.0f, 0.0f)};
+        return gesture == "" ? new DollarResult() { Value = 0, Gesture = "None Found"} : new DollarResult() { Value = Mathf.Max((minDist - 2.0f) / -2.0f, 0.0f), Gesture = gesture};
     }
 
 

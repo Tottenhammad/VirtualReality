@@ -37,7 +37,7 @@ public class DollarGesture {
     {
         DollarPoint[] newPoints = new DollarPoint[DollarPoints.Length];
         for (int i = 0; i < DollarPoints.Length; i++)
-            newPoints[i] = new DollarPoint(points[i].x - p.x, points[i].y - p.y, points[i].iD);
+            newPoints[i] = new DollarPoint(DollarPoints[i].x - p.x, DollarPoints[i].y - p.y, DollarPoints[i].iD);
 
         return newPoints;
 
@@ -49,56 +49,56 @@ public class DollarGesture {
         float minX = float.MaxValue, minY = float.MaxValue, maxX = float.MinValue, maxY = float.MinValue;
         for (int i = 0; i < DollarPoints.Length; i++)
         {
-            if (minX > points[i].x) minX = points[i].x;
-            if (minY > points[i].y) minY = points[i].y;
-            if (maxX < points[i].x) maxX = points[i].x;
-            if (maxY < points[i].y) maxY = points[i].y;
+            if (minX > DollarPoints[i].x) minX = DollarPoints[i].x;
+            if (minY > DollarPoints[i].y) minY = DollarPoints[i].y;
+            if (maxX < DollarPoints[i].x) maxX = DollarPoints[i].x;
+            if (maxY < DollarPoints[i].y) maxY = DollarPoints[i].y;
         }
         DollarPoint[] newPoints = new DollarPoint[DollarPoints.Length];
         float scale = Mathf.Max(maxX - minX, maxY - minY);
 
         for (int i = 0; i < DollarPoints.Length; i++)
-            newPoints[i] = new DollarPoint((points[i].x - minX) / scale, (points[i].y - minY) / scale, points[i].iD);
+            newPoints[i] = new DollarPoint((DollarPoints[i].x - minX) / scale, (DollarPoints[i].y - minY) / scale, DollarPoints[i].iD);
         return newPoints;
     }
 
     float PathLength(DollarPoint[] DollarPoints)
     {
         float length = 0;
-        for (int i = 1; i < points.Length; i++)
-            if (points[i].iD == points[i - 1].iD)
-                length += DollarGeometry.EuclideanDistance(points[i - 1], points[i]);
+        for (int i = 1; i < DollarPoints.Length; i++)
+            if (DollarPoints[i].iD == DollarPoints[i - 1].iD)
+                length += DollarGeometry.EuclideanDistance(DollarPoints[i - 1], DollarPoints[i]);
         return length;
     }
 
 
     #region COPIEDCODE
 
-    public DollarPoint[] Resample(DollarPoint[] points, int n)
+    public DollarPoint[] Resample(DollarPoint[] DollarPoints, int n)
     {
         DollarPoint[] newPoints = new DollarPoint[n];
-        newPoints[0] = new DollarPoint(points[0].x, points[0].y, points[0].iD);
+        newPoints[0] = new DollarPoint(DollarPoints[0].x, DollarPoints[0].y, DollarPoints[0].iD);
         int numPoints = 1;
 
-        float I = PathLength(points) / (n - 1); // computes interval length
+        float I = PathLength(DollarPoints) / (n - 1); // computes interval length
         float D = 0;
-        for (int i = 1; i < points.Length; i++)
+        for (int i = 1; i < DollarPoints.Length; i++)
         {
-            if (points[i].iD == points[i - 1].iD)
+            if (DollarPoints[i].iD == DollarPoints[i - 1].iD)
             {
-                float d = DollarGeometry.EuclideanDistance(points[i - 1], points[i]);
+                float d = DollarGeometry.EuclideanDistance(DollarPoints[i - 1], DollarPoints[i]);
                 if (D + d >= I)
                 {
-                    DollarPoint firstPoint = points[i - 1];
+                    DollarPoint firstPoint = DollarPoints[i - 1];
                     while (D + d >= I)
                     {
                         // add interpolated point
                         float t = Math.Min(Math.Max((I - D) / d, 0.0f), 1.0f);
                         if (float.IsNaN(t)) t = 0.5f;
                         newPoints[numPoints++] = new DollarPoint(
-                            (1.0f - t) * firstPoint.x + t * points[i].x,
-                            (1.0f - t) * firstPoint.y + t * points[i].y,
-                            points[i].iD
+                            (1.0f - t) * firstPoint.x + t * DollarPoints[i].x,
+                            (1.0f - t) * firstPoint.y + t * DollarPoints[i].y,
+                            DollarPoints[i].iD
                         );
 
                         // update partial length
@@ -113,7 +113,7 @@ public class DollarGesture {
         }
 
         if (numPoints == n - 1) // sometimes we fall a rounding-error short of adding the last point, so add it if so
-            newPoints[numPoints++] = new DollarPoint(points[points.Length - 1].x, points[points.Length - 1].y, points[points.Length - 1].iD);
+            newPoints[numPoints++] = new DollarPoint(DollarPoints[DollarPoints.Length - 1].x, DollarPoints[DollarPoints.Length - 1].y, DollarPoints[DollarPoints.Length - 1].iD);
         return newPoints;
     }
 

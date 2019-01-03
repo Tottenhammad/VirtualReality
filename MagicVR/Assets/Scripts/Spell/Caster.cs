@@ -35,6 +35,10 @@ public class Caster : MonoBehaviour
         tracker = new GameObject().transform;
         tracker.parent = head;
 
+
+        TextAsset[] gesturesXml = Resources.LoadAll<TextAsset>("GestureSet/10-stylus-MEDIUM/");
+        foreach (TextAsset gestureXml in gesturesXml)
+            trainingSet.Add(DollarGestureIO.ReadGestureFromXML(gestureXml.text));
     }
     void UpdateSpellRecog()
     {
@@ -66,15 +70,24 @@ public class Caster : MonoBehaviour
     public float directionTolerance;
     public List<int> sequence = new List<int>();
     public OVRInput.RawButton Draw;
+    public OVRInput.RawButton Activate;
 
 
     public Text test;
     bool tracking;
 
+    bool flip = false;
     private void Update()
     {
-
-        if (Input.GetKey(KeyCode.A) || OVRInput.Get(Draw))
+        if (OVRInput.GetDown(Activate))
+        {
+            RunRecog();
+            ResetDollar();
+            flip = true;
+        }
+        if (OVRInput.GetDown(Draw))
+            strokeId += 1;
+        if (Input.GetKey(KeyCode.A) || OVRInput.Get(Draw) && !flip)
         {
             DollarTest();
             //Track();
@@ -91,6 +104,7 @@ public class Caster : MonoBehaviour
                 ResetTracking();
                 tracking = false;
             }
+            flip = false;
         }
 
         test.text = "";
@@ -264,6 +278,10 @@ public class Caster : MonoBehaviour
 
     // Dollar-P Implementation
 
+    List<DollarGesture> trainingSet = new List<DollarGesture>();
+    List<DollarPoint> points = new List<DollarPoint>();
+    int strokeId = -1;
+
     void DollarTest()
     {
         Transform track = new GameObject().transform;
@@ -277,7 +295,24 @@ public class Caster : MonoBehaviour
         rotRefObj.eulerAngles = new Vector3(0, head.eulerAngles.y, 0);
         track.parent = rotRefObj;
 
+        points.Add(new DollarPoint(track.localPosition.x, track.localPosition.y, strokeId));
 
-        Debug.Log(track.localPosition);
+        //Debug.Log(track.localPosition);
+    }
+
+
+    void ResetDollar()
+    {
+        points.Clear();
+        strokeId = -1;
+    }
+
+    void RunRecog()
+    { 
+        DollarGesture prep = new DollarGesture(points.ToArray());
+        DollarResult result = DollarPointCloud.Classify(prep, trainingSet.ToArray());
+
+        Debug.Log(result.Gesture);
+        test.text = result.Gesture;
     }
 }
