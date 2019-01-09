@@ -47,20 +47,11 @@ public class Demo2 : MonoBehaviour
     void Update()
     {
 
-        if (platform == RuntimePlatform.Android || platform == RuntimePlatform.IPhonePlayer)
+        if (Input.GetMouseButton(0))
         {
-            if (Input.touchCount > 0)
-            {
-                virtualKeyPosition = new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y);
-            }
+            virtualKeyPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
         }
-        else
-        {
-            if (Input.GetMouseButton(0))
-            {
-                virtualKeyPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y);
-            }
-        }
+
 
         if (drawArea.Contains(virtualKeyPosition))
         {

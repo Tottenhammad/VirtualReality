@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class Caster : MonoBehaviour
 {
 
-    // Base Stuff
     public Transform castPoint;
     public List<SOSpell> useAbleSpells = new List<SOSpell>();
     public SpellCastHandler sCH;
@@ -23,11 +22,6 @@ public class Caster : MonoBehaviour
 
         Destroy(gO, 4);
     }
-
-
-    // Speech
-    KeywordRecognizer keywordRecognizer;
-    List<string> spellCasters = new List<string>();
     private void Start()
     {
         UpdateSpellRecog();
@@ -40,43 +34,6 @@ public class Caster : MonoBehaviour
         foreach (TextAsset gestureXml in gesturesXml)
             trainingSet.Add(DollarGestureIO.ReadGestureFromXML(gestureXml.text));
     }
-    void UpdateSpellRecog()
-    {
-        foreach (SOSpell spell in useAbleSpells)
-        {
-            spellCasters.Add(spell.spellName);
-        }
-
-        keywordRecognizer = new KeywordRecognizer(spellCasters.ToArray());
-        keywordRecognizer.OnPhraseRecognized += RecognizedWord;
-        keywordRecognizer.Start();
-    }
-    void RecognizedWord(PhraseRecognizedEventArgs speech)
-    {
-        foreach (SOSpell spell in useAbleSpells)
-        {
-            if (speech.text == spell.spellName)
-                UseSpell(spell);
-        }
-    }
-
-    // Gesture Recog
-    public Transform head;
-    public Transform tracker;
-    public Transform rotRefObj;
-    bool refStatus;
-    Vector3 currentDirection;
-    public float minDist;
-    public float directionTolerance;
-    public List<int> sequence = new List<int>();
-    public OVRInput.RawButton Draw;
-    public OVRInput.RawButton Activate;
-
-
-    public Text test;
-    bool tracking;
-
-    bool flip = false;
     private void Update()
     {
         if (OVRInput.GetDown(Activate))
@@ -108,11 +65,54 @@ public class Caster : MonoBehaviour
         }
 
         test.text = "";
-        foreach(int i in sequence)
+        foreach (int i in sequence)
         {
             test.text += i.ToString();
         }
     }
+
+    // Speech
+    KeywordRecognizer keywordRecognizer;
+    List<string> spellCasters = new List<string>();
+    
+    void UpdateSpellRecog()
+    {
+        foreach (SOSpell spell in useAbleSpells)
+        {
+            spellCasters.Add(spell.spellName);
+        }
+
+        keywordRecognizer = new KeywordRecognizer(spellCasters.ToArray());
+        keywordRecognizer.OnPhraseRecognized += RecognizedWord;
+        keywordRecognizer.Start();
+    }
+    void RecognizedWord(PhraseRecognizedEventArgs speech)
+    {
+        foreach (SOSpell spell in useAbleSpells)
+        {
+            if (speech.text == spell.spellName)
+                UseSpell(spell);
+        }
+    }
+
+    // Gesture
+    public Transform head;
+    public Transform tracker;
+    public Transform rotRefObj;
+    bool refStatus;
+    Vector3 currentDirection;
+    public float minDist;
+    public float directionTolerance;
+    public List<int> sequence = new List<int>();
+    public OVRInput.RawButton Draw;
+    public OVRInput.RawButton Activate;
+
+
+    public Text test;
+    bool tracking;
+
+    bool flip = false;
+
     void CheckForMatch()
     {
         foreach(SOSpell spell in useAbleSpells)
@@ -275,9 +275,7 @@ public class Caster : MonoBehaviour
         var distance = headingDir.magnitude;
         return headingDir / distance;
     }
-
-    // Dollar-P Implementation
-
+    // PDollarImplentation
     List<DollarGesture> trainingSet = new List<DollarGesture>();
     List<DollarPoint> points = new List<DollarPoint>();
     int strokeId = -1;
@@ -295,7 +293,7 @@ public class Caster : MonoBehaviour
         rotRefObj.eulerAngles = new Vector3(0, head.eulerAngles.y, 0);
         track.parent = rotRefObj;
 
-        points.Add(new DollarPoint(track.localPosition.x, track.localPosition.y, strokeId));
+        points.Add(new DollarPoint(track.localPosition.x, -track.localPosition.y, strokeId));
 
         //Debug.Log(track.localPosition);
     }
